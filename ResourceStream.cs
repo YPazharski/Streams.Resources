@@ -10,7 +10,7 @@ namespace Streams.Resources
     public class ResourceReaderStream : Stream
     {
         BufferedStream BufferedStream { get; }
-        byte[] Key { get; }
+        byte[] AimKey { get; }
         byte[] Buffer { get; }
         int BufferPosition { get; set; } = int.MaxValue;
         int BufferBytesCount { get; set; }
@@ -18,12 +18,13 @@ namespace Streams.Resources
         byte PreviosByte { get; set; } = FakeByte;
         int PassedElementsCount { get; set; }
         bool StreamIsFinished { get; set; }
+        bool BufferPositionIsOnKey { get => PassedElementsCount % 2 == 0; }
 
         public ResourceReaderStream(Stream stream, string key)
         {
             // You should not use stream in the constructor of wrapping stream.
             BufferedStream = new BufferedStream(stream);
-            Key = Encoding.ASCII.GetBytes(key);
+            AimKey = Encoding.ASCII.GetBytes(key);
             Buffer = new byte[Constants.BufferSize];  
             BufferPosition = Buffer.Length;
         }
@@ -76,9 +77,47 @@ namespace Streams.Resources
 
         private void SeekValue()
         {
-            // while not end of stream read next section key, compare with required key and skip value if read key is not equal to required key
+            // while not end of stream read next section key, compare with required key
+            // and skip value if read key is not equal to required key
+            var keyIsFound = false;
+            while (!StreamIsFinished)
+            {
+                if (BufferPositionIsOnKey)
+                {
+                    keyIsFound = CurrentElementEquals(AimKey);
+                    if (keyIsFound) break;
+                }
+                else
+                    SkipElement();
+            }
         }
 
+        bool CurrentElementEquals(byte[] bytes)
+        {
+            var passedElementsCount = PassedElementsCount;
+            var matchesCount = 0;
+            while(matchesCount < bytes.Length)
+            {
+                var _byte = GetNextByte();
+                if (_byte != bytes[matchesCount])
+                {
+                    SkipElement();
+                    return false;
+                }
+            }
+            if (PassedElementsCount == passedElementsCount)
+                return false;
+            return true;
+        }
+
+        void SkipElement()
+        {
+            var passedElementsCount = PassedElementsCount;
+            while (PassedElementsCount == passedElementsCount)
+                GetNextByte();
+        }
+
+        #region YAGNI METHODS
         public override void Flush()
         {
             // nothing to do
@@ -108,5 +147,6 @@ namespace Streams.Resources
         public override long Length => throw new NotImplementedException();
 
         public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        #endregion
     }
 }
