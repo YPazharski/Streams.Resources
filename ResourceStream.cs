@@ -12,11 +12,12 @@ namespace Streams.Resources
         BufferedStream BufferedStream { get; }
         byte[] Key { get; }
         byte[] Buffer { get; }
-        int BufferPosition { get; set; }
+        int BufferPosition { get; set; } = int.MaxValue;
         int BufferBytesCount { get; set; }
         static byte FakeByte { get; } = 9;
         byte PreviosByte { get; set; } = FakeByte;
         int PassedElementsCount { get; set; }
+        bool StreamIsFinished { get; set; }
 
         public ResourceReaderStream(Stream stream, string key)
         {
@@ -29,8 +30,9 @@ namespace Streams.Resources
 
         byte GetNextByte()
         {
-            if (BufferPosition >= Buffer.Length)
-                BufferBytesCount = BufferedStream.Read(Buffer, 0, Buffer.Length);
+            if (StreamIsFinished) throw new InvalidOperationException();
+            if (BufferPosition >= BufferBytesCount)
+                UpdateBuffer();
             var _byte = Buffer[BufferPosition++];
             switch (_byte)
             {
@@ -55,6 +57,14 @@ namespace Streams.Resources
                     PreviosByte = _byte;
                     return _byte;
             }
+        }
+
+        void UpdateBuffer()
+        {
+            BufferBytesCount = BufferedStream.Read(Buffer, 0, Buffer.Length);
+            BufferPosition = 0;
+            if (BufferBytesCount == 0)
+                StreamIsFinished = true;
         }
 
         public override int Read(byte[] buffer, int offset, int count)
