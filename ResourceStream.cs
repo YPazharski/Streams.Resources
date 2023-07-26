@@ -19,6 +19,8 @@ namespace Streams.Resources
         int PassedElementsCount { get; set; }
         bool StreamIsFinished { get; set; }
         bool BufferPositionIsOnKey { get => PassedElementsCount % 2 == 0; }
+        bool KeyIsFound { get; set; }
+        bool IsRead { get; set; }
 
         public ResourceReaderStream(Stream stream, string key)
         {
@@ -73,19 +75,40 @@ namespace Streams.Resources
             // if key not found yet: SeekValue();
             // if value is not read yet: ReadFieldValue(...)
             // else return 0;
+            if (count + offset > buffer.Length)
+                throw new ArgumentException();
+            if (!IsRead)
+            {
+                if (!StreamIsFinished && !KeyIsFound)
+                    SeekValue();
+                if (KeyIsFound)
+                    return ReadValue(buffer, offset, count);
+            }
+            return 0;
+        }
+
+        private int ReadValue(byte[] buffer, int offset, int count)
+        {
+            var readBytesCount = 0;
+            while (!BufferPositionIsOnKey && readBytesCount < count)
+            {
+                var _byte = GetNextByte();
+                buffer[offset++] = _byte;
+                readBytesCount++;
+            }
+            return readBytesCount;
         }
 
         private void SeekValue()
         {
             // while not end of stream read next section key, compare with required key
             // and skip value if read key is not equal to required key
-            var keyIsFound = false;
-            while (!StreamIsFinished)
+            while (!StreamIsFinished && !KeyIsFound)
             {
                 if (BufferPositionIsOnKey)
                 {
-                    keyIsFound = CurrentElementEquals(AimKey);
-                    if (keyIsFound) break;
+                    KeyIsFound = CurrentElementEquals(AimKey);
+                    if (KeyIsFound) break;
                 }
                 else
                     SkipElement();
