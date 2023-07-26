@@ -9,12 +9,52 @@ namespace Streams.Resources
 {
     public class ResourceReaderStream : Stream
     {
-        
+        BufferedStream BufferedStream { get; }
+        byte[] Key { get; }
+        byte[] Buffer { get; }
+        int BufferPosition { get; set; }
+        int BufferBytesCount { get; set; }
+        static byte FakeByte { get; } = 9;
+        byte PreviosByte { get; set; } = FakeByte;
+        int PassedElementsCount { get; set; }
 
         public ResourceReaderStream(Stream stream, string key)
         {
             // You should not use stream in the constructor of wrapping stream.
-            throw new NotImplementedException();
+            BufferedStream = new BufferedStream(stream);
+            Key = Encoding.ASCII.GetBytes(key);
+            Buffer = new byte[Constants.BufferSize];  
+            BufferPosition = Buffer.Length;
+        }
+
+        byte GetNextByte()
+        {
+            if (BufferPosition >= Buffer.Length)
+                BufferBytesCount = BufferedStream.Read(Buffer, 0, Buffer.Length);
+            var _byte = Buffer[BufferPosition++];
+            switch (_byte)
+            {
+                case 0:
+                    if (PreviosByte == 0)
+                    {
+                        PreviosByte = FakeByte;
+                        return _byte;
+                    }
+                    PreviosByte = 0;
+                    return GetNextByte();
+                case 1:
+                    if (PreviosByte == 0)
+                    {
+                        PreviosByte = FakeByte;
+                        PassedElementsCount++;
+                        return GetNextByte();
+                    }
+                    PreviosByte = _byte;
+                    return _byte;
+                default:
+                    PreviosByte = _byte;
+                    return _byte;
+            }
         }
 
         public override int Read(byte[] buffer, int offset, int count)
