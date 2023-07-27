@@ -92,15 +92,15 @@ namespace Streams.Resources
             AssertReadKeyEqualsData(key, testStream, value);
         }
 
-        //[Test]
-        //public void ReadsCorrectly_WhenZeroOnTheBorder()
-        //{
-        //    var keyLength = Constants.BufferSize / 2;
-        //    var key = new string('u', keyLength);
-        //    var value = new string('c', Constants.BufferSize - keyLength - 1) + "\0HELLO";
-        //    testStream = new TestStream(new[] {key, value});
-        //    AssertReadKeyEqualsData(key, testStream, value);
-        //}
+        [Test]
+        public void ReadsCorrectly_WhenZeroOnTheBorder()
+        {
+            var keyLength = Constants.BufferSize / 2;
+            var key = new string('u', keyLength);
+            var value = new string('c', Constants.BufferSize - keyLength - 1) + "\0HELLO";
+            testStream = new TestStream(new[] { key, value });
+            AssertReadKeyEqualsData(key, testStream, value);
+        }
 
         //[Test]
         //public void ReadsCorrectly_LongKey()
