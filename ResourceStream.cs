@@ -169,28 +169,32 @@ namespace Streams.Resources
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override void SetLength(long value)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public override bool CanRead => throw new NotImplementedException();
+        public override bool CanRead => true;
 
-        public override bool CanSeek => throw new NotImplementedException();
+        public override bool CanSeek => false;
 
-        public override bool CanWrite => throw new NotImplementedException();
+        public override bool CanWrite => false;
 
-        public override long Length => throw new NotImplementedException();
+        public override long Length => throw new NotSupportedException();
 
-        public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override long Position 
+        { 
+            get => BufferPosition; 
+            set => throw new NotSupportedException(); 
+        }
         #endregion
     }
 }
