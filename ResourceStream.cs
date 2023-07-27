@@ -159,11 +159,7 @@ namespace Streams.Resources
                 MoveToNextByte();
         }
 
-        #region YAGNI METHODS
-        public override void Flush()
-        {
-            // nothing to do
-        }
+        public override void Flush() { }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
@@ -193,6 +189,5 @@ namespace Streams.Resources
             get => BufferPosition; 
             set => throw new NotSupportedException(); 
         }
-        #endregion
     }
 }

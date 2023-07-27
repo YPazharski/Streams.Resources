@@ -173,7 +173,6 @@ namespace Streams.Resources
 
         private void AssertReadKeyEqualsData(string key, TestStream stream, string expectedValue)
         {
-            var expectedBytes = Encoding.ASCII.GetBytes(expectedValue);
             var result = Read(key, stream);
             var str = Encoding.ASCII.GetString(result.ToArray());
             Assert.AreEqual(expectedValue, str);
