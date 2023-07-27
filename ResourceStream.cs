@@ -47,7 +47,7 @@ namespace Streams.Resources
         byte GetCurrentByte()
         {
             CheckPosition();
-            if (StreamIsFinished) throw new InvalidOperationException();
+            if (StreamIsFinished) throw new EndOfStreamException();
             return Buffer[BufferPosition];
         }
 
