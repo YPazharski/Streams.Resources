@@ -61,11 +61,11 @@ namespace Streams.Resources
             AssertReadKeyEqualsData("ogreMagi.png", testStream);
         }
 
-        //[Test]
-        //public void ReadsCorrectly_WhenZeroValueInTheKey()
-        //{
-        //    AssertReadKeyEqualsData("white\0Wolf.png", testStream);
-        //}
+        [Test]
+        public void ReadsCorrectly_WhenZeroValueInTheKey()
+        {
+            AssertReadKeyEqualsData("white\0Wolf.png", testStream);
+        }
 
         //[Test]
         //public void ReadsCorrectly_WhenSeparatorInTheKey()
