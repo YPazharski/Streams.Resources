@@ -102,14 +102,14 @@ namespace Streams.Resources
             AssertReadKeyEqualsData(key, testStream, value);
         }
 
-        //[Test]
-        //public void ReadsCorrectly_LongKey()
-        //{
-        //    var key = new string('k', Constants.BufferSize + 1);
-        //    var value = new string('v', Constants.BufferSize / 2);
-        //    testStream = new TestStream(new[] {key, value});
-        //    AssertReadKeyEqualsData(key, testStream, value);
-        //}
+        [Test]
+        public void ReadsCorrectly_LongKey()
+        {
+            var key = new string('k', Constants.BufferSize + 1);
+            var value = new string('v', Constants.BufferSize / 2);
+            testStream = new TestStream(new[] { key, value });
+            AssertReadKeyEqualsData(key, testStream, value);
+        }
 
         //[Test]
         //public void ThrowsException_WhenReadUnknownKey()
