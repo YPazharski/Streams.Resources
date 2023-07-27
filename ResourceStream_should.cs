@@ -67,14 +67,14 @@ namespace Streams.Resources
             AssertReadKeyEqualsData("white\0Wolf.png", testStream);
         }
 
-        //[Test]
-        //public void ReadsCorrectly_WhenSeparatorInTheKey()
-        //{
-        //    var key = GetStringByBytes(68, 69, 0, 1, 70, 71);
-        //    var value = "Separator value in the key";
-        //    testStream = new TestStream(new[] {key, value});
-        //    AssertReadKeyEqualsData(key, testStream, value);
-        //}
+        [Test]
+        public void ReadsCorrectly_WhenSeparatorInTheKey()
+        {
+            var key = GetStringByBytes(68, 69, 0, 1, 70, 71);
+            var value = "Separator value in the key";
+            testStream = new TestStream(new[] { key, value });
+            AssertReadKeyEqualsData(key, testStream, value);
+        }
 
         //[Test]
         //public void ReadsCorrectly_WhenSeparatorInTheValue()
