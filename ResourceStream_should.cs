@@ -49,11 +49,11 @@ namespace Streams.Resources
             AssertReadKeyEqualsData("mapObjectsList.txt", testStream);
         }
 
-        //[Test]
-        //public void ReadVeryLongValue()
-        //{
-        //    AssertReadKeyEqualsData("ogreMagiAnimation.gif", testStream);
-        //}
+        [Test]
+        public void ReadVeryLongValue()
+        {
+            AssertReadKeyEqualsData("ogreMagiAnimation.gif", testStream);
+        }
 
         //[Test]
         //public void ReadsCorrectly_WhenZeroValueInTheValue()
