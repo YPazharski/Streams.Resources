@@ -31,17 +31,17 @@ namespace Streams.Resources
             testStream = new TestStream(GetKeysAndValues());
         }
 
-        //[Test]
-        //public void ReadSimpleKey()
-        //{
-        //    AssertReadKeyEqualsData("fileList.txt", testStream);
-        //}
+        [Test]
+        public void ReadSimpleKey()
+        {
+            AssertReadKeyEqualsData("fileList.txt", testStream);
+        }
 
-        //[Test]
-        //public void ReadEmptyValue()
-        //{
-        //    AssertReadKeyEqualsData("EmptyImage.png", testStream);
-        //}
+        [Test]
+        public void ReadEmptyValue()
+        {
+            AssertReadKeyEqualsData("EmptyImage.png", testStream);
+        }
 
         [Test]
         public void ReadLongValue()
@@ -55,11 +55,11 @@ namespace Streams.Resources
             AssertReadKeyEqualsData("ogreMagiAnimation.gif", testStream);
         }
 
-        //[Test]
-        //public void ReadsCorrectly_WhenZeroValueInTheValue()
-        //{
-        //    AssertReadKeyEqualsData("ogreMagi.png", testStream);
-        //}
+        [Test]
+        public void ReadsCorrectly_WhenZeroValueInTheValue()
+        {
+            AssertReadKeyEqualsData("ogreMagi.png", testStream);
+        }
 
         //[Test]
         //public void ReadsCorrectly_WhenZeroValueInTheKey()
@@ -173,6 +173,7 @@ namespace Streams.Resources
 
         private void AssertReadKeyEqualsData(string key, TestStream stream, string expectedValue)
         {
+            var expectedBytes = Encoding.ASCII.GetBytes(expectedValue);
             var result = Read(key, stream);
             var str = Encoding.ASCII.GetString(result.ToArray());
             Assert.AreEqual(expectedValue, str);
