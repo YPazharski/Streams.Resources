@@ -66,7 +66,8 @@ namespace Streams.Resources
                 case 0:
                     if (PreviousByte == 0)
                     {
-                        PreviousByte = FakeByte;
+                        //PreviousByte = FakeByte;
+                        UpdateBufferPosition(FakeByte);
                         return true;
                     }
                     UpdateBufferPosition(_byte);
