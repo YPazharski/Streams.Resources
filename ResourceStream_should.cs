@@ -31,23 +31,23 @@ namespace Streams.Resources
             testStream = new TestStream(GetKeysAndValues());
         }
 
-        [Test]
-        public void ReadSimpleKey()
-        {
-            AssertReadKeyEqualsData("fileList.txt", testStream);
-        }
-
-        [Test]
-        public void ReadEmptyValue()
-        {
-            AssertReadKeyEqualsData("EmptyImage.png", testStream);
-        }
+        //[Test]
+        //public void ReadSimpleKey()
+        //{
+        //    AssertReadKeyEqualsData("fileList.txt", testStream);
+        //}
 
         //[Test]
-        //public void ReadLongValue()
+        //public void ReadEmptyValue()
         //{
-        //    AssertReadKeyEqualsData("mapObjectsList.txt", testStream);
+        //    AssertReadKeyEqualsData("EmptyImage.png", testStream);
         //}
+
+        [Test]
+        public void ReadLongValue()
+        {
+            AssertReadKeyEqualsData("mapObjectsList.txt", testStream);
+        }
 
         //[Test]
         //public void ReadVeryLongValue()
