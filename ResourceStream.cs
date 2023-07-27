@@ -12,7 +12,7 @@ namespace Streams.Resources
         BufferedStream BufferedStream { get; }
         byte[] AimKey { get; }
         byte[] Buffer { get; }
-        int BufferPosition { get; set; } = int.MaxValue;
+        int BufferPosition { get; set; } 
         int BufferBytesCount { get; set; }
         static byte FakeByte { get; } = 9;
         byte PreviosByte { get; set; } = FakeByte;
@@ -25,41 +25,84 @@ namespace Streams.Resources
         public ResourceReaderStream(Stream stream, string key)
         {
             // You should not use stream in the constructor of wrapping stream.
-            BufferedStream = new BufferedStream(stream);
+            BufferedStream = new BufferedStream(stream, Constants.BufferSize);
             AimKey = Encoding.ASCII.GetBytes(key);
-            Buffer = new byte[Constants.BufferSize];  
+            Buffer = new byte[Constants.BufferSize];
             BufferPosition = Buffer.Length;
         }
 
-        byte GetNextByte()
+        //byte GetNextByte()
+        //{
+        //    if (StreamIsFinished) throw new InvalidOperationException();
+        //    if (BufferPosition >= BufferBytesCount)
+        //        UpdateBuffer();
+        //    var _byte = Buffer[BufferPosition++];
+        //    switch (_byte)
+        //    {
+        //        case 0:
+        //            if (PreviosByte == 0)
+        //            {
+        //                PreviosByte = FakeByte;
+        //                return _byte;
+        //            }
+        //            PreviosByte = 0;
+        //            return GetNextByte();
+        //        case 1:
+        //            if (PreviosByte == 0)
+        //            {
+        //                PreviosByte = FakeByte;
+        //                PassedElementsCount++;
+        //                return GetNextByte();
+        //            }
+        //            PreviosByte = _byte;
+        //            return _byte;
+        //        default:
+        //            PreviosByte = _byte;
+        //            return _byte;
+        //    }
+        //}
+
+        bool MoveToNextByte()
         {
-            if (StreamIsFinished) throw new InvalidOperationException();
+            if (StreamIsFinished) return false;
             if (BufferPosition >= BufferBytesCount)
+            {
                 UpdateBuffer();
-            var _byte = Buffer[BufferPosition++];
+                return MoveToNextByte();
+            }
+            var _byte = Buffer[BufferPosition];
             switch (_byte)
             {
                 case 0:
                     if (PreviosByte == 0)
                     {
                         PreviosByte = FakeByte;
-                        return _byte;
+                        return true;
                     }
                     PreviosByte = 0;
-                    return GetNextByte();
+                    BufferPosition++;
+                    return MoveToNextByte();
                 case 1:
                     if (PreviosByte == 0)
                     {
                         PreviosByte = FakeByte;
+                        BufferPosition++;
                         PassedElementsCount++;
-                        return GetNextByte();
+                        return true;
                     }
+                    BufferPosition++;
                     PreviosByte = _byte;
-                    return _byte;
+                    return true;
                 default:
                     PreviosByte = _byte;
-                    return _byte;
+                    BufferPosition++;
+                    return true;
             }
+        }
+
+        byte GetCurrentByte()
+        {
+            return Buffer[BufferPosition];
         }
 
         void UpdateBuffer()
@@ -79,6 +122,7 @@ namespace Streams.Resources
                 throw new ArgumentException();
             if (!IsRead)
             {
+                UpdateBuffer();
                 if (!StreamIsFinished && !KeyIsFound)
                     SeekValue();
                 if (KeyIsFound)
@@ -90,12 +134,17 @@ namespace Streams.Resources
         private int ReadValue(byte[] buffer, int offset, int count)
         {
             var readBytesCount = 0;
-            while (!BufferPositionIsOnKey && readBytesCount < count)
+            var currentByte = GetCurrentByte();
+            while (readBytesCount < count)
             {
-                var _byte = GetNextByte();
-                buffer[offset++] = _byte;
+                MoveToNextByte();
+                if (BufferPositionIsOnKey)
+                    break;
+                buffer[offset++] = currentByte;
+                currentByte = GetCurrentByte();
                 readBytesCount++;
             }
+            IsRead = true;
             return readBytesCount;
         }
 
@@ -121,13 +170,16 @@ namespace Streams.Resources
             var matchesCount = 0;
             while(matchesCount < bytes.Length)
             {
-                var _byte = GetNextByte();
+                var _byte = GetCurrentByte();
                 if (_byte != bytes[matchesCount])
                 {
                     SkipElement();
                     return false;
                 }
+                matchesCount++;
+                MoveToNextByte();
             }
+            MoveToNextByte();
             if (PassedElementsCount == passedElementsCount)
                 return false;
             return true;
@@ -137,7 +189,7 @@ namespace Streams.Resources
         {
             var passedElementsCount = PassedElementsCount;
             while (PassedElementsCount == passedElementsCount)
-                GetNextByte();
+                MoveToNextByte();
         }
 
         #region YAGNI METHODS
