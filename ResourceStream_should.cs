@@ -117,37 +117,37 @@ namespace Streams.Resources
             AssertThrowsExceptionWhenReadKey("unknown", testStream);
         }
 
-        //[TestCase(new byte[] {0, 1}, TestName = "No value after key")]
-        //[TestCase(new byte[] {0}, TestName = "Not finished separator")]
-        //[TestCase(new byte[0], TestName = "No separator after key")]
-        //public void ThrowsException_WhenUnexpectedEndOfStream_InKey(byte[] keyEnding)
-        //{
-        //    var key = "mainHero.png";
-        //    testStream = new TestStream(new[] {key}, keyEnding);
-        //    AssertThrowsExceptionWhenReadKey(key, testStream);
-        //}
+        [TestCase(new byte[] { 0, 1 }, TestName = "No value after key")]
+        [TestCase(new byte[] { 0 }, TestName = "Not finished separator")]
+        [TestCase(new byte[0], TestName = "No separator after key")]
+        public void ThrowsException_WhenUnexpectedEndOfStream_InKey(byte[] keyEnding)
+        {
+            var key = "mainHero.png";
+            testStream = new TestStream(new[] { key }, keyEnding);
+            AssertThrowsExceptionWhenReadKey(key, testStream);
+        }
 
-        //[TestCase(new byte[] {0}, TestName = "Not finished separator")]
-        //[TestCase(new byte[0], TestName = "No separator after value")]
-        //public void ThrowsException_WhenUnexpectedEndOfStream_InValue(byte[] valueEnding)
-        //{
-        //    var key = "butcher.png";
-        //    var keyBytes = Encoding.ASCII.GetBytes(key);
-        //    var streamBytes = keyBytes
-        //        .Concat(new byte[] {0, 1})
-        //        .Concat(new byte[] {1, 2, 3, 4, 5})
-        //        .Concat(valueEnding)
-        //        .ToArray();
-        //    testStream = new TestStream(streamBytes);
-        //    AssertThrowsExceptionWhenReadKey(key, testStream);
-        //}
+        [TestCase(new byte[] { 0 }, TestName = "Not finished separator")]
+        [TestCase(new byte[0], TestName = "No separator after value")]
+        public void ThrowsException_WhenUnexpectedEndOfStream_InValue(byte[] valueEnding)
+        {
+            var key = "butcher.png";
+            var keyBytes = Encoding.ASCII.GetBytes(key);
+            var streamBytes = keyBytes
+                .Concat(new byte[] { 0, 1 })
+                .Concat(new byte[] { 1, 2, 3, 4, 5 })
+                .Concat(valueEnding)
+                .ToArray();
+            testStream = new TestStream(streamBytes);
+            AssertThrowsExceptionWhenReadKey(key, testStream);
+        }
 
-        //[Test]
-        //public void WorksCorrectly_WithInfiniteStream()
-        //{
-        //    testStream = new TestStream(GetKeysAndValues(), infinityMode: true);
-        //    AssertReadKeyEqualsData("mapObjectsList.txt", testStream);
-        //}
+        [Test]
+        public void WorksCorrectly_WithInfiniteStream()
+        {
+            testStream = new TestStream(GetKeysAndValues(), infinityMode: true);
+            AssertReadKeyEqualsData("mapObjectsList.txt", testStream);
+        }
 
         //[Test]
         //public void ThrowsNotSupportedException_OnWriteAndSeekOperations()
