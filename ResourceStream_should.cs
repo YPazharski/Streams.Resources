@@ -111,11 +111,11 @@ namespace Streams.Resources
             AssertReadKeyEqualsData(key, testStream, value);
         }
 
-        //[Test]
-        //public void ThrowsException_WhenReadUnknownKey()
-        //{
-        //    AssertThrowsExceptionWhenReadKey("unknown", testStream);
-        //}
+        [Test]
+        public void ThrowsException_WhenReadUnknownKey()
+        {
+            AssertThrowsExceptionWhenReadKey("unknown", testStream);
+        }
 
         //[TestCase(new byte[] {0, 1}, TestName = "No value after key")]
         //[TestCase(new byte[] {0}, TestName = "Not finished separator")]
