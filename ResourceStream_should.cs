@@ -82,15 +82,15 @@ namespace Streams.Resources
             AssertReadKeyEqualsData("wolf.png", testStream);
         }
 
-        //[Test]
-        //public void ReadsCorrectly_WhenSeparatorOnTheBorder()
-        //{
-        //    var keyLength = Constants.BufferSize / 2;
-        //    var key = new string('k', keyLength);
-        //    var value = new string('v', Constants.BufferSize - keyLength - 1);
-        //    testStream = new TestStream(new[] {key, value});
-        //    AssertReadKeyEqualsData(key, testStream, value);
-        //}
+        [Test]
+        public void ReadsCorrectly_WhenSeparatorOnTheBorder()
+        {
+            var keyLength = Constants.BufferSize / 2;
+            var key = new string('k', keyLength);
+            var value = new string('v', Constants.BufferSize - keyLength - 1);
+            testStream = new TestStream(new[] { key, value });
+            AssertReadKeyEqualsData(key, testStream, value);
+        }
 
         //[Test]
         //public void ReadsCorrectly_WhenZeroOnTheBorder()
