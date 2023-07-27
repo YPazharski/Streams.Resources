@@ -37,11 +37,11 @@ namespace Streams.Resources
             AssertReadKeyEqualsData("fileList.txt", testStream);
         }
 
-        //[Test]
-        //public void ReadEmptyValue()
-        //{
-        //    AssertReadKeyEqualsData("EmptyImage.png", testStream);
-        //}
+        [Test]
+        public void ReadEmptyValue()
+        {
+            AssertReadKeyEqualsData("EmptyImage.png", testStream);
+        }
 
         //[Test]
         //public void ReadLongValue()
