@@ -149,9 +149,7 @@ namespace Streams.Resources
                 MoveToNextByte();
             }
             MoveToNextByte();
-            if (PassedElementsCount == passedElementsCount)
-                return false;
-            return true;
+            return (PassedElementsCount != passedElementsCount);
         }
 
         void SkipElement()
