@@ -76,11 +76,11 @@ namespace Streams.Resources
             AssertReadKeyEqualsData(key, testStream, value);
         }
 
-        //[Test]
-        //public void ReadsCorrectly_WhenSeparatorInTheValue()
-        //{
-        //    AssertReadKeyEqualsData("wolf.png", testStream);
-        //}
+        [Test]
+        public void ReadsCorrectly_WhenSeparatorInTheValue()
+        {
+            AssertReadKeyEqualsData("wolf.png", testStream);
+        }
 
         //[Test]
         //public void ReadsCorrectly_WhenSeparatorOnTheBorder()
